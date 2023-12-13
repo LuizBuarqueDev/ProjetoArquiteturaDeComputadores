@@ -1,11 +1,14 @@
 import random
+import time
 
 ar_condicionado_ligado = False
 temperatura_escolhida = 25
 temperatura_atual = random.randint(15, 50)
 compressor_ligado = False
-timer_ligar = 0
-timer_desligar = 0
+
+
+tempo_ligar = 0
+tempo_desligar = 0
 
 
 def ligar_compressor():
@@ -29,7 +32,31 @@ def ligar_desligar():
 
 
 def verificar_timers():
-  return 0
+  global ar_condicionado_ligado, timer_ligar, timer_desligar
+
+  tempo_atual = int(time.time()/60)
+
+  if ar_condicionado_ligado and tempo_ligar != 0 and tempo_atual >= timer_ligar:
+      if not compressor_ligado:
+          print("Ligando o ar condicionado")
+          ligar_desligar()
+      timer_ligar = 0 #reseta o timer ligar
+
+  if ar_condicionado_ligado and tempo_desligar != 0 and tempo_atual >= timer_desligar:
+      if compressor_ligado:
+          print("Timer chegou ao fim. Desligando o ar condicionado")
+          ligar_desligar()
+      timer_desligar = 0
+
+def monitorar_timer():
+    global tempo_ligar, tempo_desligar
+
+    tempo_atual = int(time.time() / 60)  # Convertendo para minutos
+
+    tempo_restante_ligar = max(0, tempo_ligar - tempo_atual)
+    tempo_restante_desligar = max(0, tempo_desligar - tempo_atual)
+
+    return tempo_restante_ligar, tempo_restante_desligar
 
 while True:
     print("\nControle Ar Condicionado")
@@ -58,6 +85,17 @@ while True:
     elif entrada == 4 and ar_condicionado_ligado:
         tempo_ligar = int(input("Digite o tempo para ligar (minutos): "))
         tempo_desligar = int(input("Digite o tempo para desligar (minutos): "))
+
+        # Definir os tempos de ligar e desligar baseados no tempo atual
+        timer_ligar = int(time.time() / 60) + tempo_ligar
+        timer_desligar = int(time.time() / 60) + tempo_desligar
+
+        print(f"Ar condicionado ligará em {tempo_ligar} minutos e desligará em {tempo_desligar} minutos.")
         print("Timers configurados.")
+
+        if ar_condicionado_ligado:
+            tempo_restante_ligar, tempo_restante_desligar = monitorar_timer()
+            print(f"Tempo restante para ligar: {tempo_restante_ligar} minutos")
+            print(f"Tempo restante para desligar: {tempo_restante_desligar} minutos")
 
     verificar_timers()
