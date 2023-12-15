@@ -18,7 +18,7 @@ K = 0.1
 # Função para calcular a temperatura atual a cada segundo e exibir na tela
 def calcular_temperatura():
     global temperatura_ambiente, temperatura_escolhida, K, ar_condicionado_ligado
-    for _ in range(60):  # 60 segundos
+    for _ in range(1):  # 60 segundos
         dT_dt = -K * (temperatura_ambiente - temperatura_escolhida)
         temperatura_ambiente += dT_dt  # Atualiza a temperatura ambiente
 
