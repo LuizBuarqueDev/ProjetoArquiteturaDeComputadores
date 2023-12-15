@@ -31,7 +31,7 @@ def ligar_desligar():
         tempo_alternar = 0
         start_time(tempo_alternar)
 
-    else:
+    else:  # Desliga apenas se o time for = 0
         global ar_condicionado_ligado, compressor_ligado
         ar_condicionado_ligado = not ar_condicionado_ligado
         if ar_condicionado_ligado:
