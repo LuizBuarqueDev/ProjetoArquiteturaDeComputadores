@@ -8,7 +8,7 @@ compressor_ligado = False
 temperatura_ambiente = random.randint(10, 50)
 temperatura_escolhida = 25
 termostato = temperatura_ambiente
-tempo_alternar = 0  # Renomeando a variável para controlar o tempo restante para ligar ou desligar o ar condicionado
+tempo_alternar = 0
 
 # Função para ligar o compressor e resfriar
 def ligar_compressor():
