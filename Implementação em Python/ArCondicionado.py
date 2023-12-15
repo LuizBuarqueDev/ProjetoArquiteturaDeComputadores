@@ -47,17 +47,6 @@ def ligar_desligar():
             compressor_ligado = False
 
 
-# Função para executar o temporizador
-def run_timer():
-    global tempo_alternar, timer
-    while tempo_alternar > 0:
-        tempo_alternar -= 1
-        time.sleep(2)
-        print(f"{tempo_alternar}; ", end="")
-    print("\nTempo esgotado!")
-    ligar_desligar()
-
-
 # Função para mostrar o menu
 def mostrar_menu():
     print("\n=== Controle Ar Condicionado ===")
@@ -77,7 +66,7 @@ def mostrar_menu():
 def start_time(inicio_timer):
     # Inicializa o temporizador em uma thread separada
     global timer
-    timer = threading.Timer(inicio_timer * 2, ligar_desligar)
+    timer = threading.Timer(inicio_timer * 5, ligar_desligar)
     timer.start()
 
 
@@ -98,8 +87,8 @@ while True:
 
     elif entrada == "4":
         tempo_alternar = int(input(
-            f"Digite em quanto tempo o ar condicionado deve {'desligar' if ar_condicionado_ligado else 'ligar'} (em segundos): "))
-        print(f"O temporizador foi configurado para {tempo_alternar} segundos")
+            f"Digite em quanto tempo o ar condicionado deve {'desligar' if ar_condicionado_ligado else 'ligar'} (em minutos): "))
+        print(f"O temporizador foi configurado para {tempo_alternar} minutos")
         start_time(tempo_alternar)
 
     else:
