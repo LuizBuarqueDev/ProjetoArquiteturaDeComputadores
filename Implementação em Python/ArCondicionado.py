@@ -6,7 +6,7 @@ import threading
 ar_condicionado_ligado = False
 compressor_ligado = False
 temperatura_ambiente = random.randint(10, 50)
-temperatura_escolhida = 25
+temperatura_escolhida = 25  # Temperatura padrão do Ar
 termostato = temperatura_ambiente
 tempo_alternar = 0
 
@@ -14,9 +14,9 @@ tempo_alternar = 0
 # Função para ligar o compressor e resfriar
 def ligar_compressor():
     global termostato, compressor_ligado
-    print("Temperatura Atual:", end="")
+    print("Temperatura Atual:", termostato, end="")
     while temperatura_escolhida < termostato:
-        print(end=f"; {termostato}")
+        print(end=f"; {termostato-1}")
         termostato -= 1
         time.sleep(0.15)
 
@@ -37,10 +37,8 @@ def ligar_desligar():
         if ar_condicionado_ligado:
             compressor_ligado = True
             ligar_compressor()
-            print("<Ar condicionado ligado.>")
         else:
             compressor_ligado = False
-            print("<Ar condicionado desligado.>")
     mostrar_menu()
 
 
@@ -82,12 +80,12 @@ while True:
     entrada = str(input("Digite a opção desejada: "))
 
     if entrada == "1":
-        print("Ligando/Desligando")
         ligar_desligar()
 
     elif entrada == "2" and ar_condicionado_ligado:
         temperatura_escolhida = int(input("Digite a nova temperatura desejada: "))
         print("Temperatura ajustada para", temperatura_escolhida, "°C")
+        mostrar_menu()
 
     elif entrada == "3" and ar_condicionado_ligado:
         print("Modo de operação alterado")
@@ -98,6 +96,7 @@ while True:
             f"Digite em quanto tempo o ar condicionado deve {'ligar' if not ar_condicionado_ligado else 'desligar'}: "))
         print(f"O timer está configurado para {tempo_alternar}")
         start_time(tempo_alternar)
+        mostrar_menu()
 
     else:
         print("Digite uma opção válida")
