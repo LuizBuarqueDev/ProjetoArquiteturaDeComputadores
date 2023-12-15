@@ -41,6 +41,7 @@ def ligar_desligar():
         else:
             compressor_ligado = False
             print("<Ar condicionado desligado.>")
+    mostrar_menu()
 
 
 # Função para executar o temporizador
@@ -48,7 +49,7 @@ def run_timer():
     global tempo_alternar
     while tempo_alternar > 0:
         tempo_alternar -= 1
-        time.sleep(10)
+        time.sleep(2)
         print(f"{tempo_alternar}; ", end="")
     print(" ")
     ligar_desligar()
@@ -57,7 +58,7 @@ def run_timer():
 # Função para mostrar o menu
 def mostrar_menu():
     print("\nControle Ar Condicionado")
-    print("Ar")
+    print(f"Ar {'ligado ' if not ar_condicionado_ligado else 'desligado'}")
     print("1. Ligar/Desligar")
     print(f"4. Definir Timer\n {'-' * 50}")
 
