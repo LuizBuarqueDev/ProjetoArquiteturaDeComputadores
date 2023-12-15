@@ -9,14 +9,16 @@ temperatura_ambiente = random.randint(10, 50)
 temperatura_escolhida = 25  # Temperatura padrão do Ar
 termostato = temperatura_ambiente
 tempo_alternar = 0
+timer = None  # Variável global para o temporizador
 
 
 # Função para ligar o compressor e resfriar
 def ligar_compressor():
     global termostato, compressor_ligado
+    print("Baixando a temperatura...")
     print("Temperatura Atual:", termostato, end="")
     while temperatura_escolhida < termostato:
-        print(end=f"; {termostato-1}")
+        print(end=f"; {termostato - 1}")
         termostato -= 1
         time.sleep(0.15)
 
@@ -26,56 +28,61 @@ def ligar_compressor():
 
 # Função para ligar/desligar o ar condicionado
 def ligar_desligar():
-    global tempo_alternar
+    global tempo_alternar, timer
     if tempo_alternar > 0:
         tempo_alternar = 0
+        if timer:
+            timer.cancel()  # Cancela o temporizador atual
         start_time(tempo_alternar)
-
-    else:  # Desliga apenas se o time for = 0
+    else:
         global ar_condicionado_ligado, compressor_ligado
         ar_condicionado_ligado = not ar_condicionado_ligado
         if ar_condicionado_ligado:
             compressor_ligado = True
+            print("\nLigando o ar condicionado...")
             ligar_compressor()
+            if tempo_alternar > 0:
+                start_time(tempo_alternar)
         else:
             compressor_ligado = False
-    mostrar_menu()
 
 
 # Função para executar o temporizador
 def run_timer():
-    global tempo_alternar
+    global tempo_alternar, timer
     while tempo_alternar > 0:
         tempo_alternar -= 1
         time.sleep(2)
         print(f"{tempo_alternar}; ", end="")
-    print(" ")
+    print("\nTempo esgotado!")
     ligar_desligar()
 
 
 # Função para mostrar o menu
 def mostrar_menu():
+    print("\n=== Controle Ar Condicionado ===")
     if not ar_condicionado_ligado:
-        print("\nControle Ar Condicionado")
-        print(f"**Ar desligado**")
-        print("1. Ligar/Desligar")
-        print(f"4. Definir Timer\n {'-' * 50}")
+        print("**Ar desligado**")
+        print("1. Ligar Ar Condicionado")
+        print("4. Definir Timer")
     else:
         print("**Ar Ligado**")
-        print("1. Ligar/Desligar")
+        print("1. Desligar Ar Condicionado")
         print("2. Ajustar temperatura")
         print("3. Alterar modo")
-        print(f"4. Definir Timer\n {'-' * 50}")
+        print("4. Definir Timer")
+    print('-' * 30)
 
 
 def start_time(inicio_timer):
     # Inicializa o temporizador em uma thread separada
-    inicio_timer = threading.Thread(target=run_timer)
-    inicio_timer.start()
+    global timer
+    timer = threading.Timer(inicio_timer * 2, ligar_desligar)
+    timer.start()
 
 
 # Loop principal
-mostrar_menu()  # Lembrar de colocar essa função no final de cada metodo para que o menu apareça
+mostrar_menu()
 while True:
     entrada = str(input("Digite a opção desejada: "))
 
@@ -85,18 +92,17 @@ while True:
     elif entrada == "2" and ar_condicionado_ligado:
         temperatura_escolhida = int(input("Digite a nova temperatura desejada: "))
         print("Temperatura ajustada para", temperatura_escolhida, "°C")
-        mostrar_menu()
 
     elif entrada == "3" and ar_condicionado_ligado:
-        print("Modo de operação alterado")
-        # Adicione o código para alterar o modo de operação
+        print("Opção ainda não implementada - Alterar Modo")
 
     elif entrada == "4":
         tempo_alternar = int(input(
-            f"Digite em quanto tempo o ar condicionado deve {'ligar' if not ar_condicionado_ligado else 'desligar'}: "))
-        print(f"O timer está configurado para {tempo_alternar}")
+            f"Digite em quanto tempo o ar condicionado deve {'desligar' if ar_condicionado_ligado else 'ligar'} (em segundos): "))
+        print(f"O temporizador foi configurado para {tempo_alternar} segundos")
         start_time(tempo_alternar)
-        mostrar_menu()
 
     else:
         print("Digite uma opção válida")
+
+    mostrar_menu()  # Mostra o menu após ação do usuário
