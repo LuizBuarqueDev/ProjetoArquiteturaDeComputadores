@@ -66,7 +66,7 @@ def mostrar_menu():
 def start_time(inicio_timer):
     # Inicializa o temporizador em uma thread separada
     global timer
-    timer = threading.Timer(inicio_timer * 5, ligar_desligar)
+    timer = threading.Timer(inicio_timer * 60, ligar_desligar)
     timer.start()
 
 
