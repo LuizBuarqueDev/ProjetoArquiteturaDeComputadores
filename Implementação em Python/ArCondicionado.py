@@ -12,21 +12,12 @@ termostato = temperatura_ambiente
 tempo_alternar = 0
 timer = None
 
-t_0 = temperatura_ambiente
-t_amb = temperatura_escolhida
 K = 0.1
-t = range(0, 61, 1)
-
-
-# Função para calcular a temperatura usando a Lei do Resfriamento de Newton
-def lei_do_resfriamento_de_newton(T, t, T_amb, k):
-    dT_dt = -k * (T - T_amb)
-    solution = odeint(dT_dt, t_0, t, args=(t_amb, K))
 
 
 # Função para calcular a temperatura atual a cada segundo e exibir na tela
 def calcular_temperatura():
-    global temperatura_ambiente, temperatura_escolhida, K
+    global temperatura_ambiente, temperatura_escolhida, K, ar_condicionado_ligado
     for _ in range(60):  # 60 segundos
         dT_dt = -K * (temperatura_ambiente - temperatura_escolhida)
         temperatura_ambiente += dT_dt  # Atualiza a temperatura ambiente
@@ -42,6 +33,10 @@ def ligar_compressor():
     global termostato, compressor_ligado
     print("Baixando a temperatura...")
     print("Temperatura Atual:", termostato)
+
+    # Iniciar o cálculo da temperatura em uma thread separada
+    thread_temperatura = threading.Thread(target=calcular_temperatura)
+    thread_temperatura.start()
 
     compressor_ligado = False
     print("\nFim do resfriamento.")
@@ -62,9 +57,6 @@ def ligar_desligar():
             compressor_ligado = True
             print("\nLigando o ar condicionado...")
             ligar_compressor()
-            # Iniciar o cálculo da temperatura em uma thread separada
-            thread_temperatura = threading.Thread(target=calcular_temperatura)
-            thread_temperatura.start()
             if tempo_alternar > 0:
                 start_time(tempo_alternar)
         else:
