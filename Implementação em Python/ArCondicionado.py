@@ -57,17 +57,17 @@ def run_timer():
 
 # Função para mostrar o menu
 def mostrar_menu():
-    print("\nControle Ar Condicionado")
-    print(f"Ar {'ligado ' if not ar_condicionado_ligado else 'desligado'}")
-    print("1. Ligar/Desligar")
-    print(f"4. Definir Timer\n {'-' * 50}")
-
-    if ar_condicionado_ligado:
+    if not ar_condicionado_ligado:
+        print("\nControle Ar Condicionado")
+        print(f"**Ar desligado**")
+        print("1. Ligar/Desligar")
+        print(f"4. Definir Timer\n {'-' * 50}")
+    else:
         print("**Ar Ligado**")
         print("1. Ligar/Desligar")
         print("2. Ajustar temperatura")
         print("3. Alterar modo")
-        print("4. Definir Timer")
+        print(f"4. Definir Timer\n {'-' * 50}")
 
 
 def start_time(inicio_timer):
@@ -77,23 +77,23 @@ def start_time(inicio_timer):
 
 
 # Loop principal
+mostrar_menu()  # Lembrar de colocar essa função no final de cada metodo para que o menu apareça
 while True:
-    mostrar_menu()
-    entrada = int(input("Digite a opção desejada: "))
+    entrada = str(input("Digite a opção desejada: "))
 
-    if entrada == 1:
+    if entrada == "1":
         print("Ligando/Desligando")
         ligar_desligar()
 
-    elif entrada == 2 and ar_condicionado_ligado:
+    elif entrada == "2" and ar_condicionado_ligado:
         temperatura_escolhida = int(input("Digite a nova temperatura desejada: "))
         print("Temperatura ajustada para", temperatura_escolhida, "°C")
 
-    elif entrada == 3 and ar_condicionado_ligado:
+    elif entrada == "3" and ar_condicionado_ligado:
         print("Modo de operação alterado")
         # Adicione o código para alterar o modo de operação
 
-    elif entrada == 4:
+    elif entrada == "4":
         tempo_alternar = int(input(
             f"Digite em quanto tempo o ar condicionado deve {'ligar' if not ar_condicionado_ligado else 'desligar'}: "))
         print(f"O timer está configurado para {tempo_alternar}")
